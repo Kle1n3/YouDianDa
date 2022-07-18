@@ -1,0 +1,59 @@
+import Vue from 'vue';
+import {
+    Tabbar,
+    Lazyload,
+    Swipe,
+    SwipeItem,
+    Dialog,
+    Grid,
+    GridItem,
+    Cell,
+    CellGroup,
+    Toast,
+    TabbarItem,
+    Icon,
+    NavBar,
+    Image as VanImage,
+    Form,
+    Field,
+    Button,
+    NoticeBar,
+    List,
+    Tab,
+    Tabs,
+    Empty,
+    Picker,
+    Popup,
+    Uploader,
+    Loading,
+    Divider,
+} from 'vant';
+
+Vue
+    .use(Tabbar)
+    .use(Picker)
+    .use(Divider)
+    .use(Loading)
+    .use(Uploader)
+    .use(Popup)
+    .use(Empty)
+    .use(Tab)
+    .use(Tabs)
+    .use(TabbarItem)
+    .use(List)
+    .use(Icon)
+    .use(NavBar)
+    .use(VanImage)
+    .use(Form)
+    .use(Field)
+    .use(Button)
+    .use(Toast)
+    .use(Cell)
+    .use(CellGroup)
+    .use(Grid)
+    .use(GridItem)
+    .use(Dialog)
+    .use(Swipe)
+    .use(SwipeItem)
+    .use(Lazyload)
+    .use(NoticeBar)

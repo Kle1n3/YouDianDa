@@ -16,6 +16,7 @@
         <van-icon
           name="setting-o"
           size="18"
+          @click="toProfile"
           v-if="$route.meta.title === '我的' && token"
         />
       </template>
@@ -34,7 +35,9 @@
       <van-tabbar-item replace to="/release" icon="newspaper-o"
         >发布</van-tabbar-item
       >
-      <van-tabbar-item replace to="/my" icon="user-o">我的</van-tabbar-item>
+      <van-tabbar-item replace to="/my" icon="user-o">{{
+        token ? "我的" : "未登录"
+      }}</van-tabbar-item>
     </van-tabbar>
   </div>
 </template>
@@ -47,6 +50,13 @@ export default {
   },
   computed: {
     ...mapGetters(["token"]),
+  },
+  methods: {
+    toProfile() {
+      this.$router.push({
+        path: "/profile",
+      });
+    },
   },
 };
 </script>

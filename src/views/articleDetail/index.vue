@@ -39,15 +39,30 @@
           这是文章内容
         </div>
         <van-divider>正文结束</van-divider>
+        <van-cell title="相关推荐" />
+        <van-grid :column-num="2">
+          <van-grid-item v-for="obj in recommendList" :key="obj.id">
+            <van-image width="120px" height="100px" :src="obj.pic" />
+            <p class="recommend-title">{{ obj.title }}</p>
+          </van-grid-item>
+        </van-grid>
         <!-- 底部区域 -->
         <div class="article-bottom">
-          <van-button color="#777" icon="star-o" type="default"></van-button>
+          <Collect
+            :article_id="articleInfo.id"
+            :isCollect="articleInfo.isCollect"
+          />
+          <Like :article_id="articleInfo.id" :isLike="articleInfo.isLike" />
           <van-button
-            color="#777"
-            icon="good-job-o"
+            @click="showShare = true"
+            icon="share"
             type="default"
           ></van-button>
-          <van-button color="#777" icon="share" type="default"></van-button>
+          <van-share-sheet
+            v-model="showShare"
+            title="立即分享给好友"
+            :options="options"
+          />
         </div>
         <!-- /底部区域 -->
       </div>
@@ -73,16 +88,36 @@
 
 <script>
 import { getArticleDetailApi } from "@/api/articleDetail.js";
+import Collect from "@/components/collect";
+import Like from "@/components/like";
 export default {
   name: "articleInfos",
-
+  components: {
+    Collect,
+    Like,
+  },
   data() {
     return {
       isStatusCode: 1,
       articleInfo: {},
+      recommendList: [],
+      showShare: false,
+      options: [
+        [
+          { name: "微信", icon: "wechat" },
+          { name: "朋友圈", icon: "wechat-moments" },
+          { name: "微博", icon: "weibo" },
+          { name: "QQ", icon: "qq" },
+        ],
+        [
+          { name: "复制链接", icon: "link" },
+          { name: "分享海报", icon: "poster" },
+          { name: "二维码", icon: "qrcode" },
+          { name: "小程序码", icon: "weapp-qrcode" },
+        ],
+      ],
     };
   },
-
   created() {
     this.initData();
   },
@@ -94,6 +129,7 @@ export default {
           id: this.$route.query.id,
         });
         this.articleInfo = data.data.info;
+        this.recommendList = data.data.recommend;
         this.isStatusCode = 2;
       } catch (error) {
         if (error.response && error.response === 404) {
@@ -139,7 +175,13 @@ export default {
       margin: 0;
       color: #3a3a3a;
     }
-
+    .van-cell__title {
+      font-size: 30px;
+    }
+    .recommend-title {
+      padding: 0 0.33333rem;
+      font-size: 20px;
+    }
     .user-info {
       padding: 0 32px;
       .avatar {
@@ -168,6 +210,7 @@ export default {
       padding: 55px 32px;
       /deep/ p {
         text-align: justify;
+        text-indent: 0 !important;
       }
     }
   }

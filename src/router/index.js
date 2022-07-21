@@ -96,6 +96,14 @@ const routes = [
     path: '/details',
     component: () => import('@/views/articleDetail'),
   },
+  {
+    path: '/profile',
+    component: () => import('@/views/mobile/user/userProfile'),
+    meta: {
+      title: '我的资料',
+      needLogin: true,
+    },
+  },
 ]
 
 const router = new VueRouter({

@@ -4,6 +4,7 @@ import router from './router'
 import store from './store'
 import 'amfe-flexible'
 import './vant'
+import './utils/day'
 
 Vue.config.productionTip = false
 

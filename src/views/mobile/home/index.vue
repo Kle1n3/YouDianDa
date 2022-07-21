@@ -13,6 +13,7 @@
     <van-grid :border="false" :column-num="3">
       <van-grid-item
         border
+        :to="'/details?id=' + obj.id"
         v-for="obj in hotNewsList"
         :key="obj.id"
         text="文字"

@@ -27,11 +27,17 @@ import {
     Uploader,
     Loading,
     Divider,
+    DatetimePicker,
+    ShareSheet,
+    SwipeCell,
 } from 'vant';
 
 Vue
     .use(Tabbar)
+    .use(SwipeCell)
+    .use(ShareSheet)
     .use(Picker)
+    .use(DatetimePicker)
     .use(Divider)
     .use(Loading)
     .use(Uploader)

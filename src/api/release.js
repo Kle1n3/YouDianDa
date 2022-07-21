@@ -10,3 +10,14 @@ export const uploadImageApi = (formData) => request({
 })
 
 export const releaseArtApi = data => request({ method: 'post', url: '/home/user/addArticle', data, })
+
+export const getArticleInfo = params => request({
+    url: '/home/index/show',
+    params,
+})
+
+export const editArticleApi = data => request({
+    method: 'post',
+    url: '/home/user/editArticle',
+    data,
+})

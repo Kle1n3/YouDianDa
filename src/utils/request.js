@@ -2,7 +2,7 @@ import axios from "axios";
 import store from "@/store";
 
 const instance = axios.create({
-    baseURL: 'http://122.51.249.55:8060',
+    baseURL: 'http://124.223.14.236:8060',
 })
 // /
 // http://124.223.14.236:8060

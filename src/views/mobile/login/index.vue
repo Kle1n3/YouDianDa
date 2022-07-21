@@ -78,11 +78,12 @@ export default {
         const { data } = await userLoginApi(this.userInfo);
         console.log(data);
         this.getUserToken(data.data);
+        this.$toast.success(data.errmsg);
       } catch (error) {
         console.log(error);
       }
       this.$toast.clear();
-      this.$toast.success("登录成功");
+
       const url = this.$route.query.url;
       if (url) {
         this.$router.replace(url);

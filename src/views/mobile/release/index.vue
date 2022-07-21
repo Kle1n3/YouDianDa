@@ -4,7 +4,7 @@
       <van-empty image="error" description="请登录" />
     </div>
     <div class="login" v-else>
-      <van-form ref="form">
+      <van-form id="pubarticle">
         <van-field
           v-model="article_name"
           name="article_name"
@@ -72,7 +72,19 @@
           placeholder="请输入文章正文"
           :rules="[{ required: true, message: '请输入文章正文' }]"
         />
-        <div class="btn" style="margin: 16px">
+        <div v-if="$route.query.id" class="btn" style="margin: 16px">
+          <van-button @click="saveAsDraft" icon="send-gift-o" type="info"
+            >存草稿</van-button
+          >
+          <van-button @click="edit" icon="plus" type="warning"
+            >修改文章</van-button
+          >
+
+          <van-button @click="reset" icon="revoke" type="danger"
+            >重置</van-button
+          >
+        </div>
+        <div v-else class="btn" style="margin: 16px">
           <van-button @click="release" icon="plus" type="primary"
             >发布</van-button
           >
@@ -91,7 +103,12 @@
 <script>
 import { mapGetters } from "vuex";
 import { getAllCatesApi } from "@/api/classify";
-import { uploadImageApi, releaseArtApi } from "@/api/release";
+import {
+  uploadImageApi,
+  releaseArtApi,
+  getArticleInfo,
+  editArticleApi,
+} from "@/api/release";
 export default {
   name: "Release",
   data() {
@@ -106,6 +123,8 @@ export default {
       fileList: [],
       article_content: "",
       allCate: [],
+      articleInfo: {},
+      id: this.$route.query.id,
     };
   },
   computed: {
@@ -127,6 +146,16 @@ export default {
         data.data.allTag.forEach((obj) => {
           this.tageList.push(obj.tagname);
         });
+        if (this.$route.query.id) {
+          const { data } = await getArticleInfo({
+            id: this.$route.query.id,
+          });
+          this.articleInfo = data.data.info;
+          this.article_name = data.data.info.title;
+          this.article_cate = data.data.info.catename;
+          this.article_tage = data.data.info.tags;
+          this.article_content = data.data.info.content;
+        }
       } catch (error) {
         console.log(error);
       }
@@ -149,20 +178,17 @@ export default {
           "article_name",
           "article_cate",
           "article_cate",
-          "tageList",
           "fileList",
           "article_content",
         ]);
       } catch (error) {
-        return;
+        console.log(error);
       }
       try {
         let fd = new FormData();
         fd.append("file", this.fileList[0].file);
         const { data } = await uploadImageApi(fd);
-
         const pic = data.data.savePath;
-        let cateid = 0;
         this.allCate.forEach((obj) => {
           if (obj.catename === this.article_cate) {
             cateid = obj.id;
@@ -177,6 +203,8 @@ export default {
           tags: this.article_tage,
           title: this.article_name,
         });
+        this.$toast.success("发布成功");
+        this.$router.push("/article");
       } catch (error) {
         console.log(error);
       }
@@ -187,12 +215,11 @@ export default {
           "article_name",
           "article_cate",
           "article_cate",
-          "tageList",
           "fileList",
           "article_content",
         ]);
       } catch (error) {
-        return;
+        console.log(error);
       }
       try {
         let fd = new FormData();
@@ -215,6 +242,74 @@ export default {
           tags: this.article_tage,
           title: this.article_name,
         });
+        this.$toast.success("保存成功");
+        this.$router.push("/article");
+      } catch (error) {
+        console.log(error);
+      }
+    },
+    async edit() {
+      try {
+        await this.$refs.form.validate([
+          "article_name",
+          "article_cate",
+          "article_cate",
+          "article_content",
+        ]);
+      } catch (error) {
+        console.log(error);
+      }
+      try {
+        if (this.fileList.length > 0) {
+          let fd = new FormData();
+          fd.append("file", this.fileList[0].file);
+          const { data } = await uploadImageApi(fd);
+          this.articleInfo.pic = data.data.savePath;
+        }
+        this.allCate.forEach((obj) => {
+          if (obj.catename === this.article_cate) {
+            this.articleInfo.cateid = obj.id;
+          }
+        });
+        this.articleInfo.name = this.article_name;
+        this.articleInfo.tags = this.article_tage;
+        this.articleInfo.content = this.article_content;
+        await editArticleApi(this.articleInfo);
+        this.$toast.success("修改文章成功");
+        this.$router.push("/article");
+      } catch (error) {
+        console.log(error);
+      }
+    },
+    async saveAsDraft() {
+      try {
+        await this.$refs.form.validate([
+          "article_name",
+          "article_cate",
+          "article_cate",
+          "article_content",
+        ]);
+      } catch (error) {
+        console.log(error);
+      }
+      try {
+        if (this.fileList.length > 0) {
+          let fd = new FormData();
+          fd.append("file", this.fileList[0].file);
+          const { data } = await uploadImageApi(fd);
+          this.articleInfo.pic = data.data.savePath;
+        }
+        this.allCate.forEach((obj) => {
+          if (obj.catename === this.article_cate) {
+            this.articleInfo.cateid = obj.id;
+          }
+        });
+        this.articleInfo.name = this.article_name;
+        this.articleInfo.tags = this.article_tage;
+        this.articleInfo.content = this.article_content;
+        await editArticleApi(this.articleInfo);
+        this.$toast.success("修改文章成功");
+        this.$router.push("/article");
       } catch (error) {
         console.log(error);
       }
